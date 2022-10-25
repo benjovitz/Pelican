@@ -8,7 +8,6 @@ public class WishController {
 
     @GetMapping("")
     public String index(){
-        System.out.println("hej");
         return "index";
     }
 }
