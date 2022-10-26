@@ -35,10 +35,18 @@ public class WishRepository {
           String fName = resultSet.getString(4);
           String lName = resultSet.getString(5);
           String password = resultSet.getString(6);
-          //Add shareList!
+          String queryCreate = "SELECT relatedUserID FROM relationtable WHERE userID=?";
+          PreparedStatement rpsts = conn.prepareStatement(queryCreate);
+          rpsts.setInt(1, userID);
+          ResultSet relationResultSet = rpsts.executeQuery();
           ArrayList<Integer> sharedWishLists = new ArrayList<>();
+
+          while (relationResultSet.next()) {
+            sharedWishLists.add(relationResultSet.getInt(1));
+          }
           userList.add(new User(userID, email, userName, fName, lName, password, sharedWishLists));
         }
+
       } catch (SQLException sqle) {
         System.out.println("Connection to server failed");
         sqle.printStackTrace();
