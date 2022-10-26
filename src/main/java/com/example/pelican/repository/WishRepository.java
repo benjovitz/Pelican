@@ -1,6 +1,8 @@
 package com.example.pelican.repository;
 
 import com.example.pelican.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,6 +12,9 @@ import java.util.List;
 
 @Repository
 public class WishRepository {
+
+    @Autowired
+    JdbcTemplate template;
 
   private ArrayList<User> users;
 
@@ -60,4 +65,41 @@ public class WishRepository {
     }
     return null;
   }
+
+    public void createUser(User user) {
+
+        try {
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
+                    "pelifar", "1234Fuckmekanikeren");
+            String sql = "INSERT INTO user VALUES(?,?,?,?,?,?)";
+
+            template.update(sql, user.getUserID(), user.getEmail(), user.getUserName(), user.getfName(), user.getlName(), user.getPassword());
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void deleteUserById(int deleteID) {
+        try {
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
+                    "pelifar", "1234Fuckmekanikeren");
+            String sql = "DELETE FROM user WHERE userID=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1,deleteID);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+
+
 }
