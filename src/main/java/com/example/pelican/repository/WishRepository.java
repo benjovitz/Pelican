@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import java.sql.*;
 
 @Repository
 public class WishRepository {

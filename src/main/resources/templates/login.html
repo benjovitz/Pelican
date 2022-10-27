@@ -64,6 +64,7 @@
 </header>
 <section>
     <div class="loginDiv">
+        <form action="/index" method="post">
         <table>
             <tr>
                 <th>Brugernavn</th>
@@ -71,13 +72,16 @@
             </tr>
             <tr>
                 <td>
-                    <input id="username" type="text">
+                    <input name="username" id="username" type="text">
                 </td>
                 <td>
-                    <input id="password" type="password">
+                    <input name="password" id="password" type="password">
+                    <input  type="submit">
                 </td>
+
             </tr>
         </table>
+        </form>
     </div>
     <div class="loginDiv">
         <p>har du ikke en bruger? opret en <a href="create-user">her</a></p>
