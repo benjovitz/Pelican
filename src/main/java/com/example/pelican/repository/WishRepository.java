@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 
 import java.sql.*;
+import java.util.List;
 
 @Repository
 public class WishRepository {
@@ -48,7 +49,7 @@ public class WishRepository {
         }
     }
 
-    public void addRelation(User user){
+    public void addRelation(User user) {
       int userID;
       userID = 12345;
       int userID2;
@@ -64,8 +65,9 @@ public class WishRepository {
         preparedStatement.setInt(2, userID2);
         preparedStatement.executeUpdate();
       } catch (SQLException e) {
-    e.printStackTrace();
-  }
+        e.printStackTrace();
+      }
+    }
 
    public void createWish(Wish wish) {
         try {
@@ -74,13 +76,14 @@ public class WishRepository {
                     "pelifar", "1234Fuckmekanikeren");
             String sql = "INSERT INTO wishlist VALUES(?,?,?,?)";
 
-            template.update(sql, wish.getUserID, wish.getTitle, wish.getLink, wish.getReserved);
+            template.update(sql, wish.getUserID(), wish.getTitle(), wish.getLink(), wish.isReserved());
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public void deleteWishByName(String title) {
+
+      public void deleteWishByName(String title) {
         try {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
@@ -94,7 +97,6 @@ public class WishRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
     }
 
     public void deleteRelation(int deleteID){
