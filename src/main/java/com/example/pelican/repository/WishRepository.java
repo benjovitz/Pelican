@@ -7,16 +7,14 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import java.sql.*;
 
 @Repository
 public class WishRepository {
 
     @Autowired
     JdbcTemplate template;
+
+    User currentUser = findUserByID(1);
 
   private ArrayList<User> users;
 
@@ -150,5 +148,39 @@ public class WishRepository {
       } catch (SQLException e) {
           e.printStackTrace();
       }
+    }
+
+    public String viewSharedWishLists(User user) {
+      try {
+        Connection conn = DriverManager.getConnection(
+            "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
+            "pelifar", "1234Fuckmekanikeren");
+        String queryCreate = "?";
+        PreparedStatement psts = conn.prepareStatement(queryCreate);
+        String relationString = String.valueOf(relationString(currentUser));
+        psts.setString(1,relationString);
+        psts.executeQuery();
+
+      } catch (SQLException sqle) {
+        System.out.println("Connection to database failed");
+        sqle.printStackTrace();
+      }
+    }
+
+    public StringBuilder relationString(User user) {
+      StringBuilder relationString = new StringBuilder();
+      ArrayList<Integer> relationList = user.getSharedWishlists();
+      if (relationList.size() == 0) {
+        return relationString;
+      } else {
+        for (int i = 0; i < relationList.size(); i++) {
+          if (i == 0) {
+            relationString.append("SELECT * FROM wishlist WHERE userID=" + relationList.get(i));
+          } else {
+            relationString.append(" AND userID=" + relationList.get(i));
+          }
+        }
+      }
+      return relationString;
     }
 }
