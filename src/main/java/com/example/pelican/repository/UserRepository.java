@@ -11,9 +11,11 @@ import java.util.ArrayList;
 public class UserRepository {
 
     private ArrayList<User> users;
+
     JdbcTemplate template;
+
     public UserRepository(){
-        users=userList();
+        users = userList();
     }
 
     public ArrayList<User> userList() {

@@ -1,6 +1,7 @@
 package com.example.pelican.repository;
 
 import com.example.pelican.model.User;
+import com.example.pelican.model.Wish;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,75 +18,6 @@ public class WishRepository {
 
     @Autowired
     JdbcTemplate template;
-
-    User currentUser = findUserByID(1);
-
-  private ArrayList<User> users;
-
-  public ArrayList<User> userList() {
-      ArrayList<User> userList = new ArrayList<>();
-
-      try {
-        Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-            "pelifar", "1234Fuckmekanikeren");
-        PreparedStatement psts = conn.prepareStatement("SELECT * from user");
-        ResultSet resultSet = psts.executeQuery();
-
-        while (resultSet.next()){
-          int userID = resultSet.getInt(1);
-          String email = resultSet.getString(2);
-          String userName = resultSet.getString(3);
-          String fName = resultSet.getString(4);
-          String lName = resultSet.getString(5);
-          String password = resultSet.getString(6);
-          String queryCreate = "SELECT relatedUserID FROM relationtable WHERE userID=?";
-          PreparedStatement rpsts = conn.prepareStatement(queryCreate);
-          rpsts.setInt(1, userID);
-          ResultSet relationResultSet = rpsts.executeQuery();
-          ArrayList<Integer> sharedWishLists = new ArrayList<>();
-
-          while (relationResultSet.next()) {
-            sharedWishLists.add(relationResultSet.getInt(1));
-          }
-          userList.add(new User(userID, email, userName, fName, lName, password, sharedWishLists));
-        }
-
-      } catch (SQLException sqle) {
-        System.out.println("Connection to server failed");
-        sqle.printStackTrace();
-      }
-      return userList;
-  }
-
-  public WishRepository() {
-    users = userList();
-  }
-
-  public void addUserToShare(int activeUserID, int shareWithUserID) {
-    User shareWithUser = findUserByID(shareWithUserID);
-    ArrayList<Integer> newShareList = shareWithUser.getSharedWishlists();
-    newShareList.add(activeUserID);
-    shareWithUser.setSharedWishlists(newShareList);
-    }
-
-  public User findUserByID(int userID) {
-    for (User user : users) {
-      if (user.getUserID() == userID) {
-        return user;
-      }
-    }
-    return null;
-  }
-
-  public User findUserByUserName(String userName) {
-    for (User user:users) {
-      if (user.getUserName().equals(userName)) {
-        return user;
-      }
-    }
-    return null;
-  }
 
     public void createUser(User user) {
         try {
@@ -154,21 +86,33 @@ public class WishRepository {
       }
     }
 
-    public String viewSharedWishLists(User user) {
+    public List<Wish> viewSharedWishLists(User user) {
+      ArrayList<Wish> wishes = new ArrayList<>();
       try {
         Connection conn = DriverManager.getConnection(
             "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
             "pelifar", "1234Fuckmekanikeren");
         String queryCreate = "?";
         PreparedStatement psts = conn.prepareStatement(queryCreate);
-        String relationString = String.valueOf(relationString(currentUser));
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        User user1 = new User(2,"mm","Lasse","Lasse","Dall","1234",arrayList);
+        String relationString = String.valueOf(relationString(user1));
         psts.setString(1,relationString);
-        psts.executeQuery();
+        ResultSet resultSet = psts.executeQuery();
+
+        while (resultSet.next()) {
+          int userID = resultSet.getInt(1);
+          String title = resultSet.getString(2);
+          String link = resultSet.getString(3);
+          Boolean reserved = resultSet.getBoolean(4);
+          wishes.add(new Wish(userID, title, link, reserved));
+        }
 
       } catch (SQLException sqle) {
         System.out.println("Connection to database failed");
         sqle.printStackTrace();
       }
+      return wishes;
     }
 
     public StringBuilder relationString(User user) {
