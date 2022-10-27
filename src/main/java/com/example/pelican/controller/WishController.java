@@ -21,9 +21,9 @@ public class WishController {
 
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String getAllUsers(Model model) {
         model.addAttribute("users", userRepository.userList());
-        return "index";
+        return "getAllUsers";
     }
 
     @GetMapping("/index")
