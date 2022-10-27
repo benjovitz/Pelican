@@ -74,8 +74,16 @@ public class WishRepository {
     return null;
   }
 
-    public void createUser(User user) {
+  public User findUserByUserName(String userName) {
+    for (User user:users) {
+      if (user.getUserName().equals(userName)) {
+        return user;
+      }
+    }
+    return null;
+  }
 
+    public void createUser(User user) {
         try {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
@@ -87,7 +95,6 @@ public class WishRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void deleteUserById(int deleteID) {
@@ -104,10 +111,7 @@ public class WishRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
     }
-
 
     public void addRelation(User user){
       int userID;
@@ -125,14 +129,12 @@ public class WishRepository {
           preparedStatement.setInt(2, userID2);
           preparedStatement.executeUpdate();
 
-
       } catch (SQLException e) {
           e.printStackTrace();
       }
     }
 
     public void deleteRelation(int deleteID){
-
       try{
           Connection connection = DriverManager.getConnection(
                   "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
@@ -143,17 +145,8 @@ public class WishRepository {
           preparedStatement.setInt(1,deleteID);
           preparedStatement.executeUpdate();
 
-
-
-
-
       } catch (SQLException e) {
           e.printStackTrace();
       }
-
-
     }
-
-
-
 }
