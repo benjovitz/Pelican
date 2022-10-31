@@ -48,7 +48,7 @@ public class WishController {
     }
 
 
-    @GetMapping("/createNew.html")
+    @GetMapping("/createNew")
     public String create() {
         return "createNew";
     }

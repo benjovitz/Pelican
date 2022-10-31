@@ -99,7 +99,7 @@ public class WishRepository {
         }
     }
 
-    public void deleteRelation(int deleteID){
+    public void deleteRelation(int deleteID) {
       try{
           Connection connection = DriverManager.getConnection(
                   "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
