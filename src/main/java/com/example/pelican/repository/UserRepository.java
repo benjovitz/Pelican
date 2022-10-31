@@ -87,7 +87,7 @@ public class UserRepository {
         }
     }
     public void deleteUserById(int deleteID) {
-        try {
+        try{
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
                     "pelifar", "1234Fuckmekanikeren");

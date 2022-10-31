@@ -49,6 +49,19 @@ public class WishRepository {
         }
     }
 
+    public Connection connectionSetup(){
+        try {
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
+                    "pelifar", "1234Atlantisfindesfaktisk");
+            return connection;
+        } catch (SQLException e){
+            System.out.println("cant connect to database");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void addRelation(User user) {
       int userID;
       userID = 12345;
@@ -58,7 +71,7 @@ public class WishRepository {
       try {
         Connection connection = DriverManager.getConnection(
             "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-            "pelifar", "1234Fuckmekanikeren");
+            "pelifar", "1234Atlantisfindesfaktisk");
         String sql = "INSERT INTO relationtable VALUES(?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, userID);
@@ -73,7 +86,7 @@ public class WishRepository {
         try {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-                    "pelifar", "1234Fuckmekanikeren");
+                    "pelifar", "1234Atlantisfindesfaktisk");
             String sql = "INSERT INTO wishlist VALUES(?,?,?,?)";
 
             template.update(sql, wish.getUserID(), wish.getTitle(), wish.getLink(), wish.isReserved());
@@ -87,7 +100,7 @@ public class WishRepository {
         try {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-                    "pelifar", "1234Fuckmekanikeren");
+                    "pelifar", "1234Atlantisfindesfaktisk");
             String sql = "DELETE FROM wishlist WHERE title=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -103,7 +116,7 @@ public class WishRepository {
       try{
           Connection connection = DriverManager.getConnection(
                   "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-                  "pelifar", "1234Fuckmekanikeren");
+                  "pelifar", "1234Atlantisfindesfaktisk");
           String sql = "DELETE FROM relationtable WHERE userID=?";
           PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -120,7 +133,7 @@ public class WishRepository {
       try {
         Connection conn = DriverManager.getConnection(
             "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-            "pelifar", "1234Fuckmekanikeren");
+            "pelifar", "1234Atlantisfindesfaktisk");
         String queryCreate = "?";
         PreparedStatement psts = conn.prepareStatement(queryCreate);
         ArrayList<Integer> arrayList = new ArrayList<>();
