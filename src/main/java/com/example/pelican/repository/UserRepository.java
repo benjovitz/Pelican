@@ -12,9 +12,22 @@ import java.util.ArrayList;
 public class UserRepository {
 
     private ArrayList<User> users;
+    private int currentUser;
 
     @Autowired
     JdbcTemplate template;
+
+    public Connection getConnection() {
+        try {
+            Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
+                "pelifar", "1234Atlantisfindesfaktisk");
+            return conn;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return null;
+    }
 
     public UserRepository(){
         users = userList();
@@ -24,9 +37,7 @@ public class UserRepository {
         ArrayList<User> userList = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-                    "pelifar", "1234Fuckmekanikeren");
+            Connection conn = getConnection();
             PreparedStatement psts = conn.prepareStatement("SELECT * from user");
             ResultSet resultSet = psts.executeQuery();
 
@@ -60,6 +71,7 @@ public class UserRepository {
         boolean b = true;
         User u = findUserByUserName(username);
         if(u.getPassword().equals(password)){
+            currentUser = u.getUserID();
             return b;
         } else{
             b=false;
@@ -68,9 +80,7 @@ public class UserRepository {
     }
     public void insertUser(String email, String userName, String fName, String lName, String password) {
         try {
-            Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-                "pelifar", "1234Fuckmekanikeren");
+            Connection connection = getConnection();
             String sql = "INSERT INTO user (email, userName, fName, lName, password) VALUES(?,?,?,?,?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -87,10 +97,8 @@ public class UserRepository {
         }
     }
     public void deleteUserById(int deleteID) {
-        try{
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-                    "pelifar", "1234Fuckmekanikeren");
+        try {
+            Connection connection = getConnection();
             String sql = "DELETE FROM user WHERE userID=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -127,9 +135,7 @@ public class UserRepository {
         userID2 = 32414;
 
         try {
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-                    "pelifar", "1234Fuckmekanikeren");
+            Connection connection = getConnection();
             String sql = "INSERT INTO relationtable VALUES(?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, userID);
@@ -150,9 +156,7 @@ public class UserRepository {
 
     public void deleteRelation(int deleteID){
         try{
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-                    "pelifar", "1234Fuckmekanikeren");
+            Connection connection = getConnection();
             String sql = "DELETE FROM relationtable WHERE userID=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
