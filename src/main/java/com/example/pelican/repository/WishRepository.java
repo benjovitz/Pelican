@@ -33,15 +33,10 @@ public class WishRepository {
 
 
    public void createWish(Wish wish) {
-        try {
             Connection connection = getConnection();
             String sql = "INSERT INTO wishlist VALUES(?,?,?,?)";
 
             template.update(sql, wish.getUserID(), wish.getTitle(), wish.getLink(), wish.isReserved());
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
       public void deleteWishByName(String title) {
