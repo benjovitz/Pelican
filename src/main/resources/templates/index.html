@@ -23,35 +23,5 @@
 
 <body>
 
-
-<table>
-  <thead>
-  <tr>
-    <h2>User List</h2>
-    <th>UserID</th>
-    <th>Email</th>
-    <th>User Name</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Password</th>
-    <li><a href="/createNew.html">New User</i></a></li>
-
-  </thead>
-  <tbody>
-  <tr th:each="u : ${users}">
-    <td th:text="${u.userID}">UserID</td>
-    <td th:text="${u.email}">Email</td>
-    <td th:text="${u.userName}">UserName</td>
-    <td th:text="${u.fName}">FirstName</td>
-    <td th:text="${u.lName}">LastName</td>
-    <td th:text="${u.password}">Password</td>
-    <td><a th:href="@{'/delete/' + ${u.userID}}">Delete</a></td>
-
-  </tr>
-  </th>
-  </tr>
-  </tbody>
-
-</table>
 </body>
 </html>

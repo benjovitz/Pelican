@@ -54,8 +54,13 @@ public class WishController {
     }
 
     @PostMapping("/createNew")
-    public String create(@ModelAttribute User user) {
-        userRepository.createUser(user);
+    public String create(@RequestParam("userName") String userName, @RequestParam("email") String email, @RequestParam("fName") String fName, @RequestParam("lName") String lName, @RequestParam("password") String password, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addAttribute("userName", userName);
+        redirectAttributes.addAttribute("email", email);
+        redirectAttributes.addAttribute("fName", fName);
+        redirectAttributes.addAttribute("lName", lName);
+        redirectAttributes.addAttribute("password", password);
+        userRepository.insertUser(email, userName, fName, lName, password);
         return "redirect:/";
     }
 

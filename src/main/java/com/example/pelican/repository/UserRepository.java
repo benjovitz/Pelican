@@ -1,6 +1,7 @@
 package com.example.pelican.repository;
 
 import com.example.pelican.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,7 @@ public class UserRepository {
 
     private ArrayList<User> users;
 
+    @Autowired
     JdbcTemplate template;
 
     public UserRepository(){
@@ -64,14 +66,21 @@ public class UserRepository {
             return b;
         }
     }
-    public void createUser(User user) {
+    public void insertUser(String email, String userName, String fName, String lName, String password) {
         try {
             Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
-                    "pelifar", "1234Fuckmekanikeren");
-            String sql = "INSERT INTO user VALUES(?,?,?,?,?,?)";
+                "jdbc:mysql://pelican.mysql.database.azure.com:3306/Pelican",
+                "pelifar", "1234Fuckmekanikeren");
+            String sql = "INSERT INTO user (email, userName, fName, lName, password) VALUES(?,?,?,?,?)";
 
-            template.update(sql, user.getUserID(), user.getEmail(), user.getUserName(), user.getfName(), user.getlName(), user.getPassword());
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, userName);
+            preparedStatement.setString(3, fName);
+            preparedStatement.setString(4, lName);
+            preparedStatement.setString(5, password);
+
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
