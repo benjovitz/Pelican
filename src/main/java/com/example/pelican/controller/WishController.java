@@ -33,6 +33,10 @@ public class WishController {
         System.out.println(username);
         System.out.println(password);
         if (b == true) {
+            User user = userRepository.findUserByID(userRepository.getCurrentUser());
+            String wishLists = String.valueOf(wishRepository.viewSharedWishLists(user));
+            model.addAttribute("wishLists", wishLists);
+            System.out.println(wishLists);
             return "index";
         } else {
             return "redirect:/login";

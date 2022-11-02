@@ -57,12 +57,8 @@ public class WishRepository {
       ArrayList<Wish> wishes = new ArrayList<>();
       try {
         Connection conn = getConnection();
-        String queryCreate = "?";
+        String queryCreate = String.valueOf(relationString(user));
         PreparedStatement psts = conn.prepareStatement(queryCreate);
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        User user1 = new User(2,"mm","Lasse","Lasse","Dall","1234",arrayList);
-        String relationString = String.valueOf(relationString(user1));
-        psts.setString(1,relationString);
         ResultSet resultSet = psts.executeQuery();
 
         while (resultSet.next()) {
