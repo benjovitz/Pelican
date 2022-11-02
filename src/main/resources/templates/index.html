@@ -22,6 +22,17 @@
 </head>
 
 <body>
-
+<div>
+  <form action="/addRelation/userName" method="post">
+    <label for="userName">Username</label>
+    <input type="text" id="userName" name="userName">
+    <input  type="submit">
+  </form>
+  <form action="/addRelation/email" method="post">
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email">
+    <input  type="submit">
+  </form>
+  <div th:text="${wishLists}">Wishlist</div>
 </body>
 </html>

@@ -127,12 +127,21 @@ public class UserRepository {
         return null;
     }
 
+    public User findUserByEmail(String email) {
+        for (User user:users) {
+            if (user.getUserName().equals(email)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
 
     public void addRelation(User user){
         int userID;
-        userID = 12345;
+        userID = currentUser;
         int userID2;
-        userID2 = 32414;
+        userID2 = user.getUserID();
 
         try {
             Connection connection = getConnection();

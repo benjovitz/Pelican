@@ -3,6 +3,7 @@ package com.example.pelican.controller;
 import com.example.pelican.model.User;
 import com.example.pelican.repository.UserRepository;
 import com.example.pelican.repository.WishRepository;
+import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class WishController {
         System.out.println(username);
         System.out.println(password);
         if (b == true) {
+
             return "index";
         } else {
             return "redirect:/login";
@@ -67,6 +69,23 @@ public class WishController {
     public String deleteUser(@PathVariable("userID") int deleteID) {
         userRepository.deleteUserById(deleteID);
         return "redirect:/";
+    }
+
+    @PostMapping("/addRelation/email")
+    public String addRelationByEmail(@RequestParam("email") String email,RedirectAttributes redirectAttributes){
+        //model.addAttribute("email",email);
+        redirectAttributes.addAttribute("email",email);
+        User u = userRepository.findUserByEmail(email);
+        userRepository.addRelation(u);
+        return "redirect:/index";
+    }
+    @PostMapping("/addRelation/userName")
+    public String addRelationByUserName(@RequestParam("userName") String userName,RedirectAttributes redirectAttributes){
+        //model.addAttribute("userName",userName);
+        redirectAttributes.addAttribute("userName",userName);
+        User u = userRepository.findUserByEmail(userName);
+        userRepository.addRelation(u);
+        return "redirect:/index";
     }
 
     @PostMapping("/login")
