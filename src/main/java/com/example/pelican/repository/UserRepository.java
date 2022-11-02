@@ -31,6 +31,11 @@ public class UserRepository {
 
     public UserRepository(){
         users = userList();
+        currentUser = 0;
+    }
+
+    public int getCurrentUser() {
+        return currentUser;
     }
 
     public ArrayList<User> userList() {
