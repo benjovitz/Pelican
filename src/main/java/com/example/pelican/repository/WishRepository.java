@@ -84,6 +84,7 @@ public class WishRepository {
 
       if (reserved == 1) {
         ps.setBoolean(1, false);
+        ps.setInt(2,0);
       } else {
         ps.setBoolean(1, true);
         ps.setInt(2, reservedBy);

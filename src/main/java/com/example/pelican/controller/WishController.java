@@ -30,7 +30,7 @@ public class WishController {
         return "getAllUsers";
     }
 
-    @GetMapping("/index")
+    @GetMapping("/welcome")
     public String index(@RequestParam("username")String username,@RequestParam("password")String password,Model model) {
         boolean b = userRepository.loginCheck(username, password);
         model.addAttribute("username", username);
@@ -38,28 +38,33 @@ public class WishController {
         if (b == true) {
             User user = userRepository.findUserByUserName(username);
             userRepository.setCurrentUser(user);
-            ArrayList<Wish> wishList = wishRepository.viewWishList(user);
-            model.addAttribute("wishList", wishList);
-            ArrayList<Wish> wishLists = wishRepository.viewSharedWishLists(user);
-            ArrayList<Wishlist> wishlistArray = userRepository.wishlists(wishLists);
-            model.addAttribute("wishlistArray", wishlistArray);
-            return "index";
+            return "welcome";
         } else {
             return "redirect:/login";
         }
+    }
+    @GetMapping("/index")
+    public String index(Model model){
+        User user = userRepository.getCurrentUser();
+        ArrayList<Wish> wishList = wishRepository.viewWishList(user);
+        model.addAttribute("wishList", wishList);
+        ArrayList<Wish> wishLists = wishRepository.viewSharedWishLists(user);
+        ArrayList<Wishlist> wishlistArray = userRepository.wishlists(wishLists);
+        model.addAttribute("wishlistArray", wishlistArray);
+        return "index";
     }
 
     @PostMapping("/create")
     public String postCreate(@RequestParam("title") String title, @RequestParam("link") String link) {
         wishRepository.insertWish(userRepository.getCurrentUser().getUserID(), title, link);
-        return "redirect:/";
+        return "redirect:/index";
     }
 
-    @PostMapping("/index")
+    @PostMapping("/welcome")
     public String postIndex(@RequestParam("username")String username,@RequestParam("password")String password, RedirectAttributes redirectAttributes){
         redirectAttributes.addAttribute("username",username);
         redirectAttributes.addAttribute("password",password);
-        return "redirect:/index";
+        return "redirect:/welcome";
     }
 
 
@@ -76,13 +81,13 @@ public class WishController {
         redirectAttributes.addAttribute("lName", lName);
         redirectAttributes.addAttribute("password", password);
         userRepository.insertUser(email, userName, fName, lName, password);
-        return "redirect:/";
+        return "redirect:/index";
     }
 
     @GetMapping("/delete/{userID}")
     public String deleteUser(@PathVariable("userID") int deleteID) {
         userRepository.deleteUserById(deleteID);
-        return "redirect:/";
+        return "redirect:/index";
     }
 
     @PostMapping("/addRelation/email")
@@ -91,7 +96,7 @@ public class WishController {
         redirectAttributes.addAttribute("email",email);
         User u = userRepository.findUserByEmail(email);
         userRepository.addRelation(u);
-        return "redirect:/";
+        return "redirect:/index";
     }
     @PostMapping("/addRelation/userName")
     public String addRelationByUserName(@RequestParam("userName") String userName,RedirectAttributes redirectAttributes){
@@ -99,19 +104,19 @@ public class WishController {
         redirectAttributes.addAttribute("userName",userName);
         User u = userRepository.findUserByEmail(userName);
         userRepository.addRelation(u);
-        return "redirect:/";
+        return "redirect:/index";
     }
 
     @GetMapping("/delete/{title}/delete/{userID}")
     public String deleteUser(@PathVariable("title") String deleteTitle, @PathVariable("userID") int deleteID) {
         wishRepository.deleteWishByTitleAndUserID(deleteTitle, deleteID);
-        return "redirect:/";
+        return "redirect:/index";
     }
 
     @GetMapping("/reserve/{title}/reserve/{userID}")
     public String reserevWish(@PathVariable("title") String reserveTitle, @PathVariable("userID") int reserveID) {
         wishRepository.reserveWishByTitleAndUserID(reserveTitle, reserveID, userRepository.getCurrentUser().getUserID());
-        return "redirect:/";
+        return "redirect:/index";
     }
 
 
