@@ -64,7 +64,7 @@ public class WishRepository {
         }
     }
 
-  public void reserveWishByTitleAndUserID(String title, int userID) {
+  public void reserveWishByTitleAndUserID(String title, int userID, int reservedBy) {
     try {
       Connection connection = getConnection();
       String sql = "SELECT * FROM wishlist WHERE title=? AND userID=?";
@@ -80,16 +80,17 @@ public class WishRepository {
         reserved = resultSet.getInt(4);
       }
 
-      String queryCreate = "UPDATE wishlist SET reserved=? WHERE title=? AND userID=?";
+      String queryCreate = "UPDATE wishlist SET reserved=?, reservedBy=? WHERE title=? AND userID=?";
       PreparedStatement ps = connection.prepareStatement(queryCreate);
 
       if (reserved == 1) {
         ps.setBoolean(1, false);
       } else {
         ps.setBoolean(1, true);
+        ps.setInt(2, reservedBy);
       }
-      ps.setString(2, title);
-      ps.setInt(3, userID);
+      ps.setString(3, title);
+      ps.setInt(4, userID);
 
       ps.executeUpdate();
 
@@ -111,7 +112,8 @@ public class WishRepository {
           String title = resultSet.getString(2);
           String link = resultSet.getString(3);
           Boolean reserved = resultSet.getBoolean(4);
-          wishes.add(new Wish(userID, title, link, reserved));
+          int reservedBy = resultSet.getInt(5);
+          wishes.add(new Wish(userID, title, link, reserved, reservedBy));
         }
         } catch(SQLException sqle){
           System.out.println("Connection to database failed");
@@ -134,7 +136,8 @@ public class WishRepository {
         String title = resultSet.getString(2);
         String link = resultSet.getString(3);
         Boolean reserved = resultSet.getBoolean(4);
-        wishes.add(new Wish(userID, title, link, reserved));
+        int reservedBy = resultSet.getInt(5);
+        wishes.add(new Wish(userID, title, link, reserved, reservedBy));
       }
 
     } catch (SQLException sqle) {

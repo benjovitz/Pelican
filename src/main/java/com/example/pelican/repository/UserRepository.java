@@ -90,10 +90,10 @@ public class UserRepository {
                 return b;
             }
 
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
 
-        } return false;
+        }
+        return false;
     }
 
     public void insertUser(String email, String userName, String fName, String lName, String password) {
@@ -148,7 +148,7 @@ public class UserRepository {
     }
 
     public User findUserByEmail(String email) {
-        for (User user:users) {
+        for (User user : users) {
             if (user.getUserName().equals(email)) {
                 return user;
             }
@@ -206,18 +206,23 @@ public class UserRepository {
                 int userID = relations.get(i);
                 String userName = findUserByID(userID).getUserName();
                 Wishlist wishlist = new Wishlist();
-                for (Wish wish:wishes) {
-                        if (wish.getUserID() == userID) {
+                for (Wish wish : wishes) {
+                    if (wish.getUserID() == userID) {
+                        if ((wish.getReservedBy() == 0) || (wish.getReservedBy() == currentUser.getUserID())) {
                             wishArrayList.add(wish);
                         }
                     }
+                }
 
                     wishlist.setUserName(userName);
                     wishlist.setWishes(wishArrayList);
                     wishlists.add(wishlist);
-                    }
+                }
             }
-        return wishlists;
+            return wishlists;
+        }
     }
 
-}
+
+
+
