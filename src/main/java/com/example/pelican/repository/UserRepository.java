@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class UserRepository {
 
     private ArrayList<User> users;
-    private int currentUser;
+    private User currentUser;
 
     @Autowired
     JdbcTemplate template;
@@ -33,11 +33,15 @@ public class UserRepository {
 
     public UserRepository() {
         users = userList();
-        currentUser = 0;
+        currentUser = null;
     }
 
-    public int getCurrentUser() {
+    public User getCurrentUser() {
         return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 
     public ArrayList<User> userList() {
@@ -76,14 +80,20 @@ public class UserRepository {
 
     public boolean loginCheck(String username, String password) {
         boolean b = true;
-        User u = findUserByUserName(username);
-        if (u.getPassword().equals(password)) {
-            currentUser = u.getUserID();
-            return b;
-        } else {
-            b = false;
-            return b;
+        try {
+            User u = findUserByUserName(username);
+            if (u.getPassword().equals(password)) {
+                currentUser = u;
+                return b;
+            } else {
+                b = false;
+                return b;
+            }
+
         }
+        catch (NullPointerException e){
+
+        } return false;
     }
 
     public void insertUser(String email, String userName, String fName, String lName, String password) {
@@ -137,12 +147,20 @@ public class UserRepository {
         return null;
     }
 
+    public User findUserByEmail(String email) {
+        for (User user:users) {
+            if (user.getUserName().equals(email)) {
+                return user;
+            }
+        }
+        return null;
+    }
 
     public void addRelation(User user) {
         int userID;
-        userID = 12345;
+        userID = currentUser.getUserID();
         int userID2;
-        userID2 = 32414;
+        userID2 = user.getUserID();
 
         try {
             Connection connection = getConnection();

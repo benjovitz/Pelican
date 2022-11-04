@@ -31,21 +31,23 @@ public class WishRepository {
     return null;
   }
 
+    public void insertWish(int userID,String title,String link){
+      try{
+          Connection connection = getConnection();
+          String sql = "INSERT INTO wishlist VALUES (?,?,?,DEFAULT)";
 
-   public void createWish(Wish wish) {
-     try {
-       Connection connection = getConnection();
-       String sql = "INSERT INTO wishlist VALUES(?,?,?,default)";
-       PreparedStatement preparedStatement = connection.prepareStatement(sql);
-       preparedStatement.setInt(1, wish.getUserID());
-       preparedStatement.setString(2, wish.getTitle());
-       preparedStatement.setString(3, wish.getLink());
+          PreparedStatement preparedStatement = connection.prepareStatement(sql);
+          preparedStatement.setInt(1,userID);
+          preparedStatement.setString(2,title);
+          preparedStatement.setString(3,link);
 
-       preparedStatement.executeUpdate();
-     } catch (SQLException sqle) {
-       sqle.printStackTrace();
-     }
-   }
+          preparedStatement.executeUpdate();
+      } catch (SQLException e){
+
+          throw new RuntimeException(e);
+      }
+    }
+
 
       public void deleteWishByTitleAndUserID(String title, int userID) {
         try {
