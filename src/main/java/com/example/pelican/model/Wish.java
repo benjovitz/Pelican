@@ -8,7 +8,7 @@ public class Wish {
   private boolean reserved;
   private int reservedBy;
 
-  public Wish(int userID, String title, String link, boolean reserved, int reservedByUser) {
+  public Wish(int userID, String title, String link, boolean reserved, int reservedBy) {
     this.userID = userID;
     this.title = title;
     this.link = link;
@@ -62,6 +62,6 @@ public class Wish {
 
   @Override
   public String toString() {
-    return title + ": " + link;
+    return title + ": " + link + " " + reservedBy;
   }
 }

@@ -209,6 +209,7 @@ public class UserRepository {
                 for (Wish wish : wishes) {
                     if (wish.getUserID() == userID) {
                         if ((wish.getReservedBy() == 0) || (wish.getReservedBy() == currentUser.getUserID())) {
+                            System.out.println(wish);
                             wishArrayList.add(wish);
                         }
                     }
