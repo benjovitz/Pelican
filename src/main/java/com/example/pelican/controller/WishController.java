@@ -110,7 +110,7 @@ public class WishController {
 
     @GetMapping("/reserve/{title}/reserve/{userID}")
     public String reserevWish(@PathVariable("title") String reserveTitle, @PathVariable("userID") int reserveID) {
-        wishRepository.reserveWishByTitleAndUserID(reserveTitle, reserveID);
+        wishRepository.reserveWishByTitleAndUserID(reserveTitle, reserveID, userRepository.getCurrentUser().getUserID());
         return "redirect:/";
     }
 

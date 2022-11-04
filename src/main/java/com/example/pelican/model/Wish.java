@@ -6,12 +6,14 @@ public class Wish {
   private String title;
   private String link;
   private boolean reserved;
+  private int reservedBy;
 
-  public Wish(int userID, String title, String link, boolean reserved) {
+  public Wish(int userID, String title, String link, boolean reserved, int reservedBy) {
     this.userID = userID;
     this.title = title;
     this.link = link;
     this.reserved = reserved;
+    this.reservedBy = reservedBy;
   }
 
   public int getUserID() {
@@ -46,16 +48,20 @@ public class Wish {
     this.reserved = reserved;
   }
 
-  @Override
-  public String toString() {
-    return title + ": " + link;
+  public int getReservedBy() {
+    return reservedBy;
   }
 
   public String reservedString() {
-    if (isReserved()) {
+    if (reserved) {
       return "Afreservér";
     } else {
       return "Reservér";
     }
+  }
+
+  @Override
+  public String toString() {
+    return title + ": " + link + " " + reservedBy;
   }
 }
