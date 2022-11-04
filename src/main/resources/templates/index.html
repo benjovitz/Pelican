@@ -101,7 +101,7 @@
   <div>
     <table>
       <tr><th>Reserve wish</th></tr>
-      <tr th:each = "wish : ${w.wishes}"><td>Reserve</td></tr>
+      <tr th:each = "wish : ${w.wishes}"><td><a th:href="@{'/reserve/'+${wish.title}+'/reserve/'+${wish.userID}}" th:text="${wish.reservedString()}"></a></td></tr>
     </table>
   </div>
 </section>
