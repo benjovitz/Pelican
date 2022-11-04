@@ -199,7 +199,7 @@ public class UserRepository {
 
     public ArrayList<Wishlist> wishlists(ArrayList<Wish> wishes) {
         ArrayList<Wishlist> wishlists = new ArrayList<>();
-        ArrayList<Integer> relations = findUserByID(currentUser).getSharedWishlists();
+        ArrayList<Integer> relations = findUserByID(currentUser.getUserID()).getSharedWishlists();
         if (relations.size() > 0) {
             for (int i = 0; i < relations.size(); i++) {
                 ArrayList<Wish> wishArrayList = new ArrayList<>();

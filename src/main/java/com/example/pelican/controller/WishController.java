@@ -51,8 +51,7 @@ public class WishController {
 
     @PostMapping("/create")
     public String postCreate(@RequestParam("title") String title, @RequestParam("link") String link) {
-        Wish wish = new Wish(userRepository.getCurrentUser(), title, link, false);
-        wishRepository.createWish(wish);
+        wishRepository.insertWish(userRepository.getCurrentUser().getUserID(), title, link);
         return "redirect:/";
     }
 
