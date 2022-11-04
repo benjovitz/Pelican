@@ -33,19 +33,28 @@ public class WishRepository {
 
 
    public void createWish(Wish wish) {
-            Connection connection = getConnection();
-            String sql = "INSERT INTO wishlist VALUES(?,?,?,?)";
+     try {
+       Connection connection = getConnection();
+       String sql = "INSERT INTO wishlist VALUES(?,?,?,default)";
+       PreparedStatement preparedStatement = connection.prepareStatement(sql);
+       preparedStatement.setInt(1, wish.getUserID());
+       preparedStatement.setString(2, wish.getTitle());
+       preparedStatement.setString(3, wish.getLink());
 
-            template.update(sql, wish.getUserID(), wish.getTitle(), wish.getLink(), wish.isReserved());
-    }
+       preparedStatement.executeUpdate();
+     } catch (SQLException sqle) {
+       sqle.printStackTrace();
+     }
+   }
 
-      public void deleteWishByName(String title) {
+      public void deleteWishByTitleAndUserID(String title, int userID) {
         try {
             Connection connection = getConnection();
-            String sql = "DELETE FROM wishlist WHERE title=?";
+            String sql = "DELETE FROM wishlist WHERE title=? AND userID=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1,title);
+            preparedStatement.setInt(2,userID);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -53,7 +62,41 @@ public class WishRepository {
         }
     }
 
-    public List<Wish> viewSharedWishLists(User user) {
+  public void reserveWishByTitleAndUserID(String title, int userID) {
+    try {
+      Connection connection = getConnection();
+      String sql = "SELECT * FROM wishlist WHERE title=? AND userID=?";
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+      preparedStatement.setString(1, title);
+      preparedStatement.setInt(2, userID);
+
+      ResultSet resultSet = preparedStatement.executeQuery();
+
+      int reserved = 0;
+
+      while (resultSet.next()) {
+        reserved = resultSet.getInt(4);
+      }
+
+      String queryCreate = "UPDATE wishlist SET reserved=? WHERE title=? AND userID=?";
+      PreparedStatement ps = connection.prepareStatement(queryCreate);
+
+      if (reserved == 1) {
+        ps.setBoolean(1, false);
+      } else {
+        ps.setBoolean(1, true);
+      }
+      ps.setString(2, title);
+      ps.setInt(3, userID);
+
+      ps.executeUpdate();
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+    public ArrayList<Wish> viewSharedWishLists(User user) {
       ArrayList<Wish> wishes = new ArrayList<>();
       try {
         Connection conn = getConnection();
@@ -68,13 +111,36 @@ public class WishRepository {
           Boolean reserved = resultSet.getBoolean(4);
           wishes.add(new Wish(userID, title, link, reserved));
         }
-
-      } catch (SQLException sqle) {
-        System.out.println("Connection to database failed");
-        sqle.printStackTrace();
+        } catch(SQLException sqle){
+          System.out.println("Connection to database failed");
+          sqle.printStackTrace();
+        }
+        return wishes;
       }
-      return wishes;
+
+  public ArrayList<Wish> viewWishList(User user) {
+    ArrayList<Wish> wishes = new ArrayList<>();
+    try {
+      Connection conn = getConnection();
+      String queryCreate = "SELECT * FROM wishlist WHERE userID=?";
+      PreparedStatement psts = conn.prepareStatement(queryCreate);
+      psts.setInt(1, user.getUserID());
+      ResultSet resultSet = psts.executeQuery();
+
+      while (resultSet.next()) {
+        int userID = resultSet.getInt(1);
+        String title = resultSet.getString(2);
+        String link = resultSet.getString(3);
+        Boolean reserved = resultSet.getBoolean(4);
+        wishes.add(new Wish(userID, title, link, reserved));
+      }
+
+    } catch (SQLException sqle) {
+      System.out.println("Connection to database failed");
+      sqle.printStackTrace();
     }
+    return wishes;
+  }
 
     public StringBuilder relationString(User user) {
       StringBuilder relationString = new StringBuilder();
@@ -86,7 +152,7 @@ public class WishRepository {
           if (i == 0) {
             relationString.append("SELECT * FROM wishlist WHERE userID=" + relationList.get(i));
           } else {
-            relationString.append(" AND userID=" + relationList.get(i));
+            relationString.append(" OR userID=" + relationList.get(i));
           }
         }
       }

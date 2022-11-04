@@ -22,6 +22,34 @@
 </head>
 
 <body>
-  <div th:text = "${wishLists}">wishLists</div>
+
+  <div>Dine ønsker:</div>
+  <div th:each = "w : ${wishList}">
+    <span>- </span>
+    <span th:text="${w.title}">title</span>
+    <span><a th:href="@{'/delete/' + ${w.title} + '/delete/' + ${w.userID}}"> Delete</a></span>
+  </div>
+  <br>
+  <form action="/create" method="post">
+    <label for="title">Ønske: </label>
+    <input id="title" name="title">
+
+    <label for="link">Link: </label>
+    <input id="link" name="link">
+
+    <button type="submit">Opret ønske</button>
+  </form>
+  <br>
+
+  <div th:each = "w : ${wishlistArray}">
+    <span th:text="${w.userName}">Username</span>
+    <span>'s ønsker:</span>
+    <div th:each="wish : ${w.wishes}">
+      <span>- </span>
+      <span th:text="${wish.title}">Title</span>
+      <span><a th:href="@{'/reserve/' + ${wish.title} + '/reserve/' + ${wish.userID}}" th:text="${wish.reservedString()}"></a></span>
+    </div>
+    <br>
+  </div>
 </body>
 </html>

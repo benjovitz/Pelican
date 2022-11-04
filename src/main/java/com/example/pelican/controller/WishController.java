@@ -1,12 +1,17 @@
 package com.example.pelican.controller;
 
 import com.example.pelican.model.User;
+import com.example.pelican.model.Wish;
+import com.example.pelican.model.Wishlist;
 import com.example.pelican.repository.UserRepository;
 import com.example.pelican.repository.WishRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+
 @Controller
 public class WishController {
 
@@ -30,17 +35,24 @@ public class WishController {
         boolean b = userRepository.loginCheck(username, password);
         model.addAttribute("username", username);
         model.addAttribute("password", password);
-        System.out.println(username);
-        System.out.println(password);
         if (b == true) {
             User user = userRepository.findUserByID(userRepository.getCurrentUser());
-            String wishLists = String.valueOf(wishRepository.viewSharedWishLists(user));
-            model.addAttribute("wishLists", wishLists);
-            System.out.println(wishLists);
+            ArrayList<Wish> wishList = wishRepository.viewWishList(user);
+            model.addAttribute("wishList", wishList);
+            ArrayList<Wish> wishLists = wishRepository.viewSharedWishLists(user);
+            ArrayList<Wishlist> wishlistArray = userRepository.wishlists(wishLists);
+            model.addAttribute("wishlistArray", wishlistArray);
             return "index";
         } else {
             return "redirect:/login";
         }
+    }
+
+    @PostMapping("/create")
+    public String postCreate(@RequestParam("title") String title, @RequestParam("link") String link) {
+        Wish wish = new Wish(userRepository.getCurrentUser(), title, link, false);
+        wishRepository.createWish(wish);
+        return "redirect:/";
     }
 
     @PostMapping("/index")
@@ -72,6 +84,19 @@ public class WishController {
         userRepository.deleteUserById(deleteID);
         return "redirect:/";
     }
+
+    @GetMapping("/delete/{title}/delete/{userID}")
+    public String deleteUser(@PathVariable("title") String deleteTitle, @PathVariable("userID") int deleteID) {
+        wishRepository.deleteWishByTitleAndUserID(deleteTitle, deleteID);
+        return "redirect:/";
+    }
+
+    @GetMapping("/reserve/{title}/reserve/{userID}")
+    public String reserevWish(@PathVariable("title") String reserveTitle, @PathVariable("userID") int reserveID) {
+        wishRepository.reserveWishByTitleAndUserID(reserveTitle, reserveID);
+        return "redirect:/";
+    }
+
 
     @PostMapping("/login")
     public String logincheck(@RequestParam("username") String username, @RequestParam("password") String password, RedirectAttributes redirectAttributes) {

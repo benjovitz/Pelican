@@ -48,11 +48,14 @@ public class Wish {
 
   @Override
   public String toString() {
-    return "Wish{" +
-        "userID=" + userID +
-        ", title='" + title + '\'' +
-        ", link='" + link + '\'' +
-        ", reserved=" + reserved +
-        '}';
+    return title + ": " + link;
+  }
+
+  public String reservedString() {
+    if (isReserved()) {
+      return "Afreservér";
+    } else {
+      return "Reservér";
+    }
   }
 }

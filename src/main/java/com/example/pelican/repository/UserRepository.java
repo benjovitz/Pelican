@@ -1,6 +1,8 @@
 package com.example.pelican.repository;
 
 import com.example.pelican.model.User;
+import com.example.pelican.model.Wish;
+import com.example.pelican.model.Wishlist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,7 +31,7 @@ public class UserRepository {
         return null;
     }
 
-    public UserRepository(){
+    public UserRepository() {
         users = userList();
         currentUser = 0;
     }
@@ -46,7 +48,7 @@ public class UserRepository {
             PreparedStatement psts = conn.prepareStatement("SELECT * from user");
             ResultSet resultSet = psts.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 int userID = resultSet.getInt(1);
                 String email = resultSet.getString(2);
                 String userName = resultSet.getString(3);
@@ -72,17 +74,18 @@ public class UserRepository {
         return userList;
     }
 
-    public boolean loginCheck(String username,String password){
+    public boolean loginCheck(String username, String password) {
         boolean b = true;
         User u = findUserByUserName(username);
-        if(u.getPassword().equals(password)){
+        if (u.getPassword().equals(password)) {
             currentUser = u.getUserID();
             return b;
-        } else{
-            b=false;
+        } else {
+            b = false;
             return b;
         }
     }
+
     public void insertUser(String email, String userName, String fName, String lName, String password) {
         try {
             Connection connection = getConnection();
@@ -101,19 +104,21 @@ public class UserRepository {
             throw new RuntimeException(e);
         }
     }
+
     public void deleteUserById(int deleteID) {
         try {
             Connection connection = getConnection();
             String sql = "DELETE FROM user WHERE userID=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setInt(1,deleteID);
+            preparedStatement.setInt(1, deleteID);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
     public User findUserByID(int userID) {
         for (User user : users) {
             if (user.getUserID() == userID) {
@@ -124,7 +129,7 @@ public class UserRepository {
     }
 
     public User findUserByUserName(String userName) {
-        for (User user:users) {
+        for (User user : users) {
             if (user.getUserName().equals(userName)) {
                 return user;
             }
@@ -133,7 +138,7 @@ public class UserRepository {
     }
 
 
-    public void addRelation(User user){
+    public void addRelation(User user) {
         int userID;
         userID = 12345;
         int userID2;
@@ -151,6 +156,7 @@ public class UserRepository {
             e.printStackTrace();
         }
     }
+
     public void addUserToShare(int activeUserID, int shareWithUserID) {
         User shareWithUser = findUserByID(shareWithUserID);
         ArrayList<Integer> newShareList = shareWithUser.getSharedWishlists();
@@ -159,17 +165,41 @@ public class UserRepository {
     }
 
 
-    public void deleteRelation(int deleteID){
-        try{
+    public void deleteRelation(int deleteID) {
+        try {
             Connection connection = getConnection();
             String sql = "DELETE FROM relationtable WHERE userID=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setInt(1,deleteID);
+            preparedStatement.setInt(1, deleteID);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    public ArrayList<Wishlist> wishlists(ArrayList<Wish> wishes) {
+        ArrayList<Wishlist> wishlists = new ArrayList<>();
+        ArrayList<Integer> relations = findUserByID(currentUser).getSharedWishlists();
+        if (relations.size() > 0) {
+            for (int i = 0; i < relations.size(); i++) {
+                ArrayList<Wish> wishArrayList = new ArrayList<>();
+                int userID = relations.get(i);
+                String userName = findUserByID(userID).getUserName();
+                Wishlist wishlist = new Wishlist();
+                for (Wish wish:wishes) {
+                        if (wish.getUserID() == userID) {
+                            wishArrayList.add(wish);
+                        }
+                    }
+
+                    wishlist.setUserName(userName);
+                    wishlist.setWishes(wishArrayList);
+                    wishlists.add(wishlist);
+                    }
+            }
+        return wishlists;
+    }
+
 }
