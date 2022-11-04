@@ -2,19 +2,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CreateWish</title>
+    <title>Nyt ønske</title>
+    <style>
+        html {
+            background-color: beige;
+        }
+
+        #createwish {
+            padding-top: 30px;
+            padding-left: 700px;
+            color: beige;
+
+        }
+
+        header{
+            border: 4px solid darkslategrey;
+            background-color: darkslategrey;
+        }
+
+        h1{
+            padding-left: 800px;
+            color: beige;
+        }
+
+        form{
+            font-size: 18px;
+            padding-right: 30px;
+
+        }
+        input{
+            size: 18px;
+            padding-right: 300px;
+        }
+        img{
+            height: 800px;
+            width: 2000px;
+        }
+        #button{
+            padding-left: 45px;
+        }
+    </style>
 </head>
+<header><h1>Opret Ønske</h1></header>
 <body>
 
 <div id="createwish">
     <form action="/createwish" method="post">
   <label for="title">Title</label>
   <input type="text" id="title" name="title">
-
+<br>
   <label for="link">Link</label>
   <input type="text" id="link" name="link">
-        <input type="submit">
+        <br>
+        <div id="button"><input type="submit"></div>
     </form>
 </div>
+
+<br>
+<img th:src="@{images/pelikan1.jpg}" src="../static/images/pelikan1.jpg">
+
+
+
 </body>
 </html>
+
