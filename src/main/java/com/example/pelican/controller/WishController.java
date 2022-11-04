@@ -1,6 +1,7 @@
 package com.example.pelican.controller;
 
 import com.example.pelican.model.User;
+import com.example.pelican.model.Wish;
 import com.example.pelican.repository.UserRepository;
 import com.example.pelican.repository.WishRepository;
 import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
@@ -25,16 +26,17 @@ public class WishController {
         model.addAttribute("users", userRepository.userList());
         return "getAllUsers";
     }
-
     @GetMapping("/index")
     public String index(@RequestParam("username")String username,@RequestParam("password")String password,Model model) {
-        boolean b = userRepository.loginCheck(username, password);
-        model.addAttribute("username", username);
-        model.addAttribute("password", password);
-        System.out.println(username);
-        System.out.println(password);
+        boolean b = false;
+            b = userRepository.loginCheck(username, password);
+            model.addAttribute("username", username);
+            model.addAttribute("password", password);
+            System.out.println(username);
+            System.out.println(password);
         if (b == true) {
-            User user = userRepository.findUserByID(userRepository.getCurrentUser());
+            User user = userRepository.findUserByUserName(username);
+            userRepository.setCurrentUser(user);
             String wishLists = String.valueOf(wishRepository.viewSharedWishLists(user));
             model.addAttribute("wishLists", wishLists);
             System.out.println(wishLists);
@@ -80,7 +82,7 @@ public class WishController {
         redirectAttributes.addAttribute("email",email);
         User u = userRepository.findUserByEmail(email);
         userRepository.addRelation(u);
-        return "redirect:/index";
+        return "redirect:/";
     }
     @PostMapping("/addRelation/userName")
     public String addRelationByUserName(@RequestParam("userName") String userName,RedirectAttributes redirectAttributes){
@@ -88,18 +90,30 @@ public class WishController {
         redirectAttributes.addAttribute("userName",userName);
         User u = userRepository.findUserByEmail(userName);
         userRepository.addRelation(u);
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     @PostMapping("/login")
     public String logincheck(@RequestParam("username") String username, @RequestParam("password") String password, RedirectAttributes redirectAttributes) {
         redirectAttributes.addAttribute("username",username);
         redirectAttributes.addAttribute("password",password);
-        return "redirect://login";
+        return "redirect:/login";
 
     }
     @GetMapping("/login")
     public String login(){
         return "login";
         }
+    @GetMapping("/createwish")
+    public String createWish(){
+        return "createwish";
     }
+    @PostMapping("/createwish")
+    public String creatWish(@RequestParam("title")String title,@RequestParam("link")String link, RedirectAttributes redirectAttributes){
+        redirectAttributes.addAttribute("title",title);
+        redirectAttributes.addAttribute("link",link);
+        wishRepository.insertWish(userRepository.getCurrentUser().getUserID(),title,link);
+        return "redirect:/index";
+    }
+    }
+
