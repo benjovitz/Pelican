@@ -7,13 +7,30 @@
   <link rel="stylesheet" href="myCSS.css">
 
   <style>
-    th{
-      font-size: 16px;
+    body{
+      background-color: white;
+      margin-left: 20vh;
+      margin-right: 20vh;
     }
-    td, th{
-      text-align: left;
-      color: black;
-      border: 2px solid black;
+
+    Section{
+      background-color: antiquewhite;
+      display: grid;
+      grid-row: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    header{
+      display: flex;
+      justify-content: center;
+      background-color: antiquewhite;
+      font-size: 1.5em;
+    }
+
+
+
+    .addPeopleDiv{
+      position: fixed;
     }
 
 
@@ -67,4 +84,61 @@
 
   <div> nyt ønske? <a href="/createwish">klik her</a></div>
 </body>
+<body>
+<div class="addPeopleDiv">TILFØJ</div>
+<header>
+  Min ønskeliste
+</header>
+<section>
+
+  <div>
+    <table>
+      <tr>
+        <th>Title</th>
+      </tr>
+      <tr th:each = "w : ${wishList}"><td  th:text="${w.title}">Oregano</td></tr>
+    </table>
+  </div>
+  <div>
+    <table>
+      <tr><th>link</th></tr>
+      <tr th:each = "w : ${wishList}"><td th:text="${w.link}">link.dk</td></tr>
+    </table>
+  </div>
+  <div>
+    <table>
+      <tr><th>Remove wish</th></tr>
+      <tr th:each = "w : ${wishList}"><td><a th:href="@{'/delete/' + ${w.title} + '/delete/' + ${w.userID}}"> Delete</a></td></tr>
+    </table>
+  </div>
+</section>
+
+<div th:each="w : ${wishlistArray}">
+  <span th:text="${w.userName}">Username</span>
+  <span>'s ønsker:</span>
+<section>
+  <div>
+    <table>
+      <tr>
+        <th>Title</th>
+      </tr>
+      <tr th:each = "wish : ${w.wishes}"><td th:text="${wish.title}">Oregano</td></tr>
+    </table>
+  </div>
+  <div>
+    <table>
+      <tr><th>link</th></tr>
+      <tr th:each = "wish : ${w.wishes}"><td th:text="${wish.link}">link.dk</td></tr>
+    </table>
+  </div>
+  <div>
+    <table>
+      <tr><th>Reserve wish</th></tr>
+      <tr th:each = "wish : ${w.wishes}"><td>Reserve</td></tr>
+    </table>
+  </div>
+</section>
+</div>
+</body>
+
 </html>

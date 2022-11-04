@@ -43,7 +43,6 @@ public class WishRepository {
 
           preparedStatement.executeUpdate();
       } catch (SQLException e){
-
           throw new RuntimeException(e);
       }
     }
