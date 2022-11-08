@@ -104,22 +104,26 @@ public class WishRepository {
       ArrayList<Wish> wishes = new ArrayList<>();
       try {
         Connection conn = getConnection();
-        String queryCreate = String.valueOf(relationString(user));
-        PreparedStatement psts = conn.prepareStatement(queryCreate);
-        ResultSet resultSet = psts.executeQuery();
+        if (String.valueOf(relationString(user)).equals(" ")) {
+          return wishes;
+        } else {
+          String queryCreate = String.valueOf(relationString(user));
+          PreparedStatement psts = conn.prepareStatement(queryCreate);
+          ResultSet resultSet = psts.executeQuery();
 
-        while (resultSet.next()) {
-          int userID = resultSet.getInt(1);
-          String title = resultSet.getString(2);
-          String link = resultSet.getString(3);
-          Boolean reserved = resultSet.getBoolean(4);
-          int reservedBy = resultSet.getInt(5);
-          wishes.add(new Wish(userID, title, link, reserved, reservedBy));
+          while (resultSet.next()) {
+            int userID = resultSet.getInt(1);
+            String title = resultSet.getString(2);
+            String link = resultSet.getString(3);
+            Boolean reserved = resultSet.getBoolean(4);
+            int reservedBy = resultSet.getInt(5);
+            wishes.add(new Wish(userID, title, link, reserved, reservedBy));
+          }
         }
         } catch(SQLException sqle){
           System.out.println("Connection to database failed");
           sqle.printStackTrace();
-        }
+      }
         return wishes;
       }
 
@@ -152,6 +156,7 @@ public class WishRepository {
       StringBuilder relationString = new StringBuilder();
       ArrayList<Integer> relationList = user.getSharedWishlists();
       if (relationList.size() == 0) {
+        relationString.append(" ");
         return relationString;
       } else {
         for (int i = 0; i < relationList.size(); i++) {
