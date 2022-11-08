@@ -42,6 +42,7 @@ public class WishRepository {
           preparedStatement.setString(3,link);
 
           preparedStatement.executeUpdate();
+
       } catch (SQLException e){
           throw new RuntimeException(e);
       }
