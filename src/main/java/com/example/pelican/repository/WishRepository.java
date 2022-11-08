@@ -34,7 +34,7 @@ public class WishRepository {
     public void insertWish(int userID,String title,String link){
       try{
           Connection connection = getConnection();
-          String sql = "INSERT INTO wishlist VALUES (?,?,?,DEFAULT)";
+          String sql = "INSERT INTO wishlist VALUES (?,?,?,DEFAULT,DEFAULT)";
 
           PreparedStatement preparedStatement = connection.prepareStatement(sql);
           preparedStatement.setInt(1,userID);
